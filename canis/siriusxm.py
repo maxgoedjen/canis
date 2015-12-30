@@ -3,6 +3,8 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
+from canis.song import Song
+
 class Channel(object):
 
 	def __init__(self, name, identifier):
@@ -11,16 +13,6 @@ class Channel(object):
 
 	def __repr__(self):
 		return '{} ({})'.format(self.name, self.identifier)
-
-class Song(object):
-
-	def __init__(self, title, artist, album):
-		self.title = title
-		self.artist = artist
-		self.album = album
-
-	def __repr__(self):
-		return '{} by {} ({})'.format(self.title, self.artist, self.album)
 
 class NotAvailable(Exception):
 	pass
@@ -63,7 +55,7 @@ def get_currently_playing(channel_id):
 	artist = current['artists']['name']
 	name = current['song']['name']
 	album = current['song']['album']['name']
-	if album == 'CD Single':
+	if album.lower() == 'cd single':
 		album = None
 	return Song(name, artist, album)
 
