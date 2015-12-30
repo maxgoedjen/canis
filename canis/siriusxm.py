@@ -22,6 +22,9 @@ class Song(object):
 	def __repr__(self):
 		return '{} by {} ({})'.format(self.title, self.artist, self.album)
 
+class NotAvailable(Exception):
+	pass
+
 def get_channel_list():
 	r = requests.get('https://www.siriusxm.com/channellineup/')
 	soup = BeautifulSoup(r.text, 'html.parser')
@@ -33,7 +36,9 @@ def get_channel_list():
 		raw_href = link.get('href')
 		href = raw_href.replace('/', '')
 		items.append(Channel(name, href))
-	return items
+	if items:
+		return items
+	raise NotAvailable()
 
 def get_raw_id(channel_id):
 	r = requests.get('https://www.siriusxm.com/{}'.format(channel_id))
@@ -42,7 +47,7 @@ def get_raw_id(channel_id):
 		matches = re.search('ChannelContentID = "([^"]*)"', script.text)
 		if matches:
 			return matches.group(1)
-	return None
+	raise NotAvailable()
 
 def get_currently_playing(channel_id):
 	raw_id = get_raw_id(channel_id)
@@ -52,9 +57,14 @@ def get_currently_playing(channel_id):
 	r = requests.get(api_url)
 	json = r.json()
 	current = json['channelMetadataResponse']['metaData']['currentEvent']
+	artist_id = current['artists']['id']
+	if not artist_id:
+		raise NotAvailable()
 	artist = current['artists']['name']
 	name = current['song']['name']
 	album = current['song']['album']['name']
+	if album == 'CD Single':
+		album = None
 	return Song(name, artist, album)
 
 if __name__ == '__main__':
