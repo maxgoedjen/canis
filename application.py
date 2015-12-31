@@ -9,5 +9,5 @@ def main():
         print "Error {}".format(e)
 
 if __name__ == "__main__":
-    oauth.app.run(debug=True)
+    oauth.app.run()
     main()
