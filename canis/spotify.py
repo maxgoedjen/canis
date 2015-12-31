@@ -12,7 +12,7 @@ class NotFound(Exception):
 def id_for_song(song):
 	album_subq = '%20album:{}'.format(song.album) if song.album else ''
 	query = 'q=track:{}%20artist:{}{}&type=track'.format(song.title, song.artist, album_subq)
-	r = requests.get('https://api.spotify.com/v1/search?{}'.format(query))
+	r = requests.get('https://api.spotify.com/v1/search?{}'.format(query), headers=headers())
 	json = r.json()
 	try:
 		track = json['tracks']['items'][0]
