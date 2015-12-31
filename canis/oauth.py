@@ -3,13 +3,12 @@ from urllib import urlencode
 from datetime import datetime, timedelta
 
 from flask import Flask, request, redirect
-from flask_oauth import OAuth
 import requests
 
 app = Flask(__name__)
 
-SPOTIFY_CLIENT_ID = environ.get('CANIS_SPOTIFY_API_CLIENT_ID')
-SPOTIFY_SECRET = environ.get('CANIS_SPOTIFY_API_SECRET')
+SPOTIFY_CLIENT_ID = environ['CANIS_SPOTIFY_API_CLIENT_ID']
+SPOTIFY_SECRET = environ['CANIS_SPOTIFY_API_SECRET']
 SPOTIFY_CALLBACK = environ.get('CANIS_SPOTIFY_API_CALLBACK', 'http://127.0.0.1:5000/callback/')
 
 access_token = None
@@ -61,7 +60,7 @@ def store_token_response(resp):
     access_token = resp['access_token']
     if resp.get('refresh_token'):
         refresh_token = resp['refresh_token']
-    expiration = datetime.now() + timedelta(seconds=int(resp['expires_in']))
+    expiration = datetime.utcnow() + timedelta(seconds=int(resp['expires_in']))
     print (access_token, refresh_token, expiration)
 
 def shutdown_server():
