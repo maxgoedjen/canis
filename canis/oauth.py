@@ -42,6 +42,7 @@ def callback():
     store_token_response(resp)
     rm = requests.get('https://api.spotify.com/v1/me', headers={'Authorization': 'Bearer {}'.format(access_token)})
     me = rm.json()
+    global user_id
     user_id = me['id']
     shutdown_server()
     return redirect(url_for('login'))
