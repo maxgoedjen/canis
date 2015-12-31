@@ -1,12 +1,14 @@
 from time import sleep
 from datetime import datetime
 import traceback
+from os import environ
 
 from canis import siriusxm, spotify, oauth
 
+CHANNEL_NAMES = environ['CANIS_CHANNEL_NAMES'].split(',')
+
 def main():
-    channel_names = ['Sirius XMU', 'Alt Nation']
-    channels = siriusxm.channels_from_names(channel_names)
+    channels = siriusxm.channels_from_names(CHANNEL_NAMES)
     print('Monitoring channels: {}'.format(channels))
     while True:
         if oauth.expiration < datetime.utcnow():
@@ -23,7 +25,7 @@ def main():
             except spotify.NotFound, e:
                 print('Unable to find {} on Spotify'.format(e.song))
             except siriusxm.NotAvailable, e:
-                print('Unable load data for {}'.format(channel))
+                print('Unable load data for {} {}'.format(channel, e.json))
             except Exception, e:
                 print('Error {} {}'.format(e, traceback.format_exc()))
         sleep(60)

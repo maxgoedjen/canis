@@ -18,7 +18,9 @@ class Channel(object):
 		return '{} ({})'.format(self.name, self.identifier)
 
 class NotAvailable(Exception):
-	pass
+
+	def __init__(self, json):
+		self.json = json
 
 def get_channel_list():
 	r = requests.get('https://www.siriusxm.com/channellineup/')
@@ -33,7 +35,7 @@ def get_channel_list():
 		items[name] = Channel(name, href, None)
 	if items:
 		return items
-	raise NotAvailable()
+	raise NotAvailable(r.json())
 
 def channels_from_names(names):
 	selected = []
@@ -55,7 +57,7 @@ def get_raw_id(channel_id):
 		matches = re.search('ChannelContentID = "([^"]*)"', script.text)
 		if matches:
 			return matches.group(1)
-	raise NotAvailable()
+	raise NotAvailable(r.json())
 
 @fresh
 def get_currently_playing(channel_id):
@@ -68,10 +70,9 @@ def get_currently_playing(channel_id):
 		current = json['channelMetadataResponse']['metaData']['currentEvent']
 		artist_id = current['artists']['id']
 	except Exception, e:
-		print json
-		raise NotAvailable()
+		raise NotAvailable(json)
 	if not artist_id:
-		raise NotAvailable()
+		raise NotAvailable(json)
 	artist = current['artists']['name']
 	name = current['song']['name']
 	album = current['song']['album']['name']
