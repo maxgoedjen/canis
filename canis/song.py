@@ -6,4 +6,4 @@ class Song(object):
 		self.album = album
 
 	def __repr__(self):
-		return '{} by {} ({})'.format(self.title, self.artist, self.album)
+		return '{} by {} ({})'.format(self.title, self.artist, self.album or 'No Album')
