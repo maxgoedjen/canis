@@ -31,5 +31,5 @@ def main():
         sleep(60)
 
 if __name__ == "__main__":
-    oauth.app.run()
+    oauth.app.run(host='0.0.0.0')
     main()
