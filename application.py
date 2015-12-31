@@ -14,10 +14,12 @@ def main():
             oauth.refresh()
         for channel in channels:
             try:
-                current = siriusxm.get_currently_playing(channel.identifier)
-                spotify_id = spotify.id_for_song(current)
-                print(spotify.playlist_id_for_name(channel.name))
-                print('Added {} - {} to {}'.format(current, spotify_id, channel.name))
+                current, fresh = siriusxm.get_currently_playing(channel.identifier)
+                if fresh:
+                    spotify_id = spotify.id_for_song(current)
+                    playlist_id = spotify.playlist_id_for_name(channel.name)
+                    spotify.add_song_to_playlist(spotify_id, playlist_id)
+                    print('Added {} - {} to {}'.format(current, spotify_id, channel.name))
             except spotify.NotFound, e:
                 print('Unable to find {} on Spotify'.format(e.song))
             except siriusxm.NotAvailable, e:
@@ -28,7 +30,4 @@ def main():
 
 if __name__ == "__main__":
     oauth.app.run()
-    while(True):
-        print(spotify.playlist_id_for_name('Sirius XMU'))
-        sleep(1)
-    # main()
+    main()

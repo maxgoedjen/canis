@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import difflib
 
 from canis.song import Song
+from canis.memoize import fresh
 
 class Channel(object):
 
@@ -56,14 +57,19 @@ def get_raw_id(channel_id):
 			return matches.group(1)
 	raise NotAvailable()
 
+@fresh
 def get_currently_playing(channel_id):
 	raw_time = datetime.utcnow()
 	time = raw_time.strftime('%m-%d-%H:%M:00')
 	api_url = 'http://www.siriusxm.com/metadata/pdt/en-us/json/channels/{}/timestamp/{}'.format(channel_id, time)
 	r = requests.get(api_url)
 	json = r.json()
-	current = json['channelMetadataResponse']['metaData']['currentEvent']
-	artist_id = current['artists']['id']
+	try:
+		current = json['channelMetadataResponse']['metaData']['currentEvent']
+		artist_id = current['artists']['id']
+	except Exception, e:
+		print json
+		raise NotAvailable()
 	if not artist_id:
 		raise NotAvailable()
 	artist = current['artists']['name']

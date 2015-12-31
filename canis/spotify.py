@@ -31,13 +31,14 @@ def playlist_id_for_name(name):
 	return create_playlist(name)
 
 def create_playlist(name):
-	url = 'https://api.spotify.com/v1/users/{}/playlists?limit=50'.format(oauth.user_id)
+	url = 'https://api.spotify.com/v1/users/{}/playlists'.format(oauth.user_id)
 	r = requests.post(url, json={'name': name, 'public': 'false'}, headers=headers())
 	resp = r.json()
 	return resp['id']
 
 def add_song_to_playlist(song_id, playlist_id):
-	pass
+	url = 'https://api.spotify.com/v1/users/{}/playlists/{}/tracks'.format(oauth.user_id, playlist_id)
+	r = requests.post(url, json={'uris': [song_id]}, headers=headers())
 
 def headers():
 	return {'Authorization': 'Bearer {}'.format(oauth.access_token)}
