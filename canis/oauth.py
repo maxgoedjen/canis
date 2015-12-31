@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 SPOTIFY_CLIENT_ID = environ['CANIS_SPOTIFY_API_CLIENT_ID']
 SPOTIFY_SECRET = environ['CANIS_SPOTIFY_API_SECRET']
-SPOTIFY_CALLBACK = environ.get('CANIS_SPOTIFY_API_CALLBACK', 'http://127.0.0.1:5000/callback/')
+SPOTIFY_CALLBACK = environ.get('CANIS_SPOTIFY_API_CALLBACK', 'http://127.0.0.1:5000/callback')
 
 access_token = None
 refresh_token = None
@@ -28,7 +28,7 @@ def login():
     url = 'https://accounts.spotify.com/authorize?{}'.format(arg_str)
     return redirect(url)
 
-@app.route('/callback/')
+@app.route('/callback')
 def callback():
     args = {
         'code': request.args['code'],
