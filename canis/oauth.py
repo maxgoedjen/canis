@@ -61,7 +61,6 @@ def store_token_response(resp):
     if resp.get('refresh_token'):
         refresh_token = resp['refresh_token']
     expiration = datetime.utcnow() + timedelta(seconds=int(resp['expires_in']))
-    print (access_token, refresh_token, expiration)
 
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
