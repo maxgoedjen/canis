@@ -16,6 +16,7 @@ def main():
             try:
                 current = siriusxm.get_currently_playing(channel.identifier)
                 spotify_id = spotify.id_for_song(current)
+                print(spotify.playlist_id_for_name(channel.name))
                 print('Added {} - {} to {}'.format(current, spotify_id, channel.name))
             except spotify.NotFound, e:
                 print('Unable to find {} on Spotify'.format(e.song))
@@ -27,4 +28,7 @@ def main():
 
 if __name__ == "__main__":
     oauth.app.run()
-    main()
+    while(True):
+        print(spotify.playlist_id_for_name('Sirius XMU'))
+        sleep(1)
+    # main()
