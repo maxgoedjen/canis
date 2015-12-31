@@ -2,13 +2,15 @@ import re
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
+import difflib
 
 from canis.song import Song
 
 class Channel(object):
 
-	def __init__(self, name, identifier):
+	def __init__(self, name, href, identifier):
 		self.name = name
+		self.href = href
 		self.identifier = identifier
 
 	def __repr__(self):
@@ -21,16 +23,29 @@ def get_channel_list():
 	r = requests.get('https://www.siriusxm.com/channellineup/')
 	soup = BeautifulSoup(r.text, 'html.parser')
 	rows = soup.find_all('td', {'class': 'channelname'})
-	items = []
+	items = {}
 	for row in rows:
 		link = row.find('a')
 		name = link.get('title')
 		raw_href = link.get('href')
 		href = raw_href.replace('/', '')
-		items.append(Channel(name, href))
+		items[name] = Channel(name, href, None)
 	if items:
 		return items
 	raise NotAvailable()
+
+def channels_from_names(names):
+	selected = []
+	all_channels = get_channel_list()
+	all_names = all_channels.keys()
+	for channel_name in names:
+		matches = difflib.get_close_matches(channel_name, all_names, 1)
+		if matches:
+			unidentified = all_channels[matches[0]]
+			identifier = get_raw_id(unidentified.href)
+			selected.append(Channel(unidentified.name, unidentified.href, identifier))
+	return selected
+
 
 def get_raw_id(channel_id):
 	r = requests.get('https://www.siriusxm.com/{}'.format(channel_id))
@@ -42,10 +57,9 @@ def get_raw_id(channel_id):
 	raise NotAvailable()
 
 def get_currently_playing(channel_id):
-	raw_id = get_raw_id(channel_id)
 	raw_time = datetime.utcnow()
 	time = raw_time.strftime('%m-%d-%H:%M:00')
-	api_url = 'http://www.siriusxm.com/metadata/pdt/en-us/json/channels/{}/timestamp/{}'.format(raw_id, time)
+	api_url = 'http://www.siriusxm.com/metadata/pdt/en-us/json/channels/{}/timestamp/{}'.format(channel_id, time)
 	r = requests.get(api_url)
 	json = r.json()
 	current = json['channelMetadataResponse']['metaData']['currentEvent']
