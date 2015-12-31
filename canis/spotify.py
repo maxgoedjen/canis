@@ -17,6 +17,10 @@ def id_for_song(song):
 	try:
 		track = json['tracks']['items'][0]
 	except Exception:
+		# Sometimes album is incorrect, try again without album
+		if song.album:
+			stripped = Song(song.title, song.artist, None)
+			return id_for_song(stripped)
 		raise NotFound(song)
 	return track['uri']
 
