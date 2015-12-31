@@ -8,8 +8,11 @@ Canis is best run on a separate server.
 ### Environment Variables
 
 `CANIS_SPOTIFY_API_CLIENT_ID` - `Client ID` from your Spotify application
+
 `CANIS_SPOTIFY_API_SECRET` - `Client Secret` from your Spotify application
+
 `CANIS_SPOTIFY_API_CALLBACK` - `Redirect URL` from your Spotify application
+
 `CANIS_CHANNEL_NAMES` - comma separated list of channel names (example: `Sirius XMU, Alt Nation`)
 
 ### Step by Step
