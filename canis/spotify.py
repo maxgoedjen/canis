@@ -30,7 +30,6 @@ def playlist_id_for_name(name):
 			return playlist['id']
 	return create_playlist(name)
 
-
 def create_playlist(name):
 	url = 'https://api.spotify.com/v1/users/{}/playlists?limit=50'.format(oauth.user_id)
 	r = requests.post(url, json={'name': name, 'public': 'false'}, headers=headers())
