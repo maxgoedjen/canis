@@ -2,7 +2,7 @@ from os import environ
 from urllib import urlencode
 from datetime import datetime, timedelta
 
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, url_for
 import requests
 
 app = Flask(__name__)
@@ -14,6 +14,7 @@ SPOTIFY_CALLBACK = environ.get('CANIS_SPOTIFY_API_CALLBACK', 'http://127.0.0.1:5
 access_token = None
 refresh_token = None
 expiration = None
+user_id = None
 
 @app.route('/login')
 def login():
@@ -39,8 +40,11 @@ def callback():
     r = requests.post('https://accounts.spotify.com/api/token', data=args)
     resp = r.json()
     store_token_response(resp)
+    rm = requests.get('https://api.spotify.com/v1/me', headers={'Authorization': 'Bearer {}'.format(access_token)})
+    me = rm.json()
+    user_id = me['id']
     shutdown_server()
-    return "You're good to go"
+    return redirect(url_for('login'))
 
 def refresh():
     args = {
