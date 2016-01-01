@@ -3,7 +3,7 @@ Build Spotify playlists off of Sirius XM
 
 ## Setup
 
-Canis is best run on a separate server.
+Canis is best run on a separate server. Canis should run on Python 3.x and 2.7
 
 ### Environment Variables
 
