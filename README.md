@@ -18,6 +18,6 @@ Canis is best run on a separate server.
 ### Step by Step
 
 1. Go [here](https://developer.spotify.com/my-applications) and create a Spotify Application.
-2. Set your callback URL as `http://YOUR_SERVER_URL/callback/` (this will be `http://127.0.0.1:5000/callback/` if you're running it locally). Note the `Client ID` and `Client Secret`
+2. Set your callback URL as `http://YOUR_SERVER_URL/callback` (this will be `http://127.0.0.1:5000/callback` if you're running it locally). Note the `Client ID` and `Client Secret`
 3. Make sure you set all the environment variables specified above with the values from your Spotify Application.
-4. Run `application.py` and navigate to `http://YOUR_SERVER_URL/login`. Sign into your Spotify account.
+4. Run `application.py` and navigate to `http://YOUR_SERVER_URL:PORT/login`. Sign into your Spotify account.
