@@ -69,7 +69,7 @@ def get_currently_playing(channel_id):
 	try:
 		current = json['channelMetadataResponse']['metaData']['currentEvent']
 		artist_id = current['artists']['id']
-	except Exception, e:
+	except Exception as e:
 		raise NotAvailable(json)
 	if not artist_id:
 		raise NotAvailable(json)

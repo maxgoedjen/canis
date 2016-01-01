@@ -1,7 +1,10 @@
 from os import environ
-from urllib import urlencode
 from datetime import datetime, timedelta
-
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
+    
 from flask import Flask, request, redirect, url_for
 import requests
 

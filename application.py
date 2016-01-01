@@ -22,11 +22,11 @@ def main():
                     playlist_id = spotify.playlist_id_for_name(channel.name)
                     spotify.add_song_to_playlist(spotify_id, playlist_id)
                     print('Added {} - {} to {}'.format(current, spotify_id, channel.name))
-            except spotify.NotFound, e:
+            except spotify.NotFound as e:
                 print('Unable to find {} on Spotify'.format(e.song))
-            except siriusxm.NotAvailable, e:
+            except siriusxm.NotAvailable as e:
                 print('Unable load data for {} {}'.format(channel, e.json))
-            except Exception, e:
+            except Exception as e:
                 print('Error {} {}'.format(e, traceback.format_exc()))
         sleep(60)
 
